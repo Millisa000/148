@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 # ---НАСТРОЙКИ---
 TOKEN = ""
@@ -53,4 +54,14 @@ print(f"Реальный статус загрузки: {status_check.get('statu
 if status_check.get('status') == 'failed':
     print(f"Причина неудачи: {status_check.get('message')}")
 elif status_check.get('status') == 'success':
+    file_meta = requests.get("https://yandex.net/resources",
+                             headers=headers, params={"path": DISK_PATH}).json()
+    result_data = {
+        "image": SOURCE_URL,
+        "size": file_meta.get("size"),
+        "folder": FOLDER_NAME,
+        "filename": "cat_from_air.jpg"
+    }
+    with open("result.json", "w", encoding="utf-8") as f:
+        json.dump(result_data, f, ensure_ascii=False, indent=4)
     print(" ВСЁ! Картинка точно на месте. Обнови страницу Диска.")
